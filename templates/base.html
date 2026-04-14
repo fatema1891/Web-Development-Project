@@ -159,6 +159,94 @@
         </div>
     </footer>
 
-   
+    
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Close message functionality
+        document.querySelectorAll('.message-close').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const message = this.parentElement;
+                message.style.animation = 'slideOutRight 0.3s ease-out forwards';
+                setTimeout(() => {
+                    if (message.parentNode) {
+                        message.remove();
+                    }
+                }, 300);
+            });
+        });
+
+        // Auto-hide messages after 5 seconds
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => {
+                msg.style.animation = 'slideOutRight 0.3s ease-out forwards';
+                setTimeout(() => {
+                    if (msg.parentNode) {
+                        msg.remove();
+                    }
+                }, 300);
+            });
+        }, 5000);
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                    navbar.style.boxShadow = '0 5px 25px rgba(0, 0, 0, 0.1)';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                    navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+                }
+            }
+        });
+
+        // Button click handlers
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!this.classList.contains('no-alert')) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                    
+                    // Show temporary message
+                    const tempMsg = document.createElement('div');
+                    tempMsg.className = 'message message-info';
+                    tempMsg.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        <span>This is a demo. Connect to Django backend for full functionality.</span>
+                        <button class="message-close">&times;</button>
+                    `;
+                    document.querySelector('.messages-container').appendChild(tempMsg);
+                    
+                    // Add close functionality to new message
+                    tempMsg.querySelector('.message-close').addEventListener('click', function() {
+                        tempMsg.style.animation = 'slideOutRight 0.3s ease-out forwards';
+                        setTimeout(() => tempMsg.remove(), 300);
+                    });
+                    
+                    // Auto remove after 3 seconds
+                    setTimeout(() => {
+                        if (tempMsg.parentNode) {
+                            tempMsg.style.animation = 'slideOutRight 0.3s ease-out forwards';
+                            setTimeout(() => tempMsg.remove(), 300);
+                        }
+                    }, 3000);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
