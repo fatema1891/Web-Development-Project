@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EduMaster</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        /* Dashboard specific styles */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-number { font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0; }
+        .course-list { display: flex; flex-direction: column; gap: 1rem; }
+        .course-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .course-item:hover { transform: translateX(5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .role-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .role-btn {
+            padding: 0.75rem 2rem;
+            border: 2px solid #667eea;
+            background: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .role-btn.active, .role-btn:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .dashboard-section { display: none; animation: fadeInUp 0.4s ease-out; }
+        .dashboard-section.active { display: block; }
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo"><i class="fas fa-graduation-cap"></i><span>EduMaster</span></a>
+            <div class="nav-links">
+                <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#"><i class="fas fa-book"></i> My Courses</a>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">F</div>
+                    <div><strong id="userName">Fatema Akther</strong><span class="role-badge" id="userRoleBadge">Student</span></div>
+                    <a href="login.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+            <div class="mobile-menu-btn"><i class="fas fa-bars"></i></div>
+        </div>
+    </nav>
+
+    <div class="messages-container" id="messagesContainer"></div>
+
+    <main class="main-container">
+        <!-- Role Selector (for demo only) -->
+        <div class="role-selector">
+            <button class="role-btn active" onclick="switchRole('student')">👨‍🎓 Student View</button>
+            <button class="role-btn" onclick="switchRole('teacher')">👨‍🏫 Teacher View</button>
+            <button class="role-btn" onclick="switchRole('admin')">👑 Admin View</button>
+        </div>
+
+        <!-- Student Dashboard -->
+        <div id="studentSection" class="dashboard-section active">
+            <div class="stats-grid">
+                <div class="stat-card"><i class="fas fa-book" style="font-size: 2rem; color: #667eea;"></i><div class="stat-number">4</div><div>Enrolled Courses</div></div>
+                <div class="stat-card"><i class="fas fa-clock" style="font-size: 2rem; color: #4caf50;"></i><div class="stat-number">65%</div><div>Overall Progress</div></div>
+                <div class="stat-card"><i class="fas fa-trophy" style="font-size: 2rem; color: #ff9800;"></i><div class="stat-number">3</div><div>Certificates</div></div>
+            </div>
+            <div class="card"><div class="card-header"><i class="fas fa-graduation-cap"></i> My Enrolled Courses</div>
+                <div class="course-list">
+                    <div class="course-item"><div><strong>Web Development Bootcamp</strong><div class="progress-bar"><div class="progress-fill" style="width: 75%"></div></div></div><button class="btn btn-primary" onclick="showMessage('Opening Web Development course...')">Continue</button></div>
+                    <div class="course-item"><div><strong>Python Masterclass</strong><div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div></div><button class="btn btn-primary" onclick="showMessage('Opening Python course...')">Continue</button></div>
+                    <div class="course-item"><div><strong>Data Science Fundamentals</strong><div class="progress-bar"><div class="progress-fill" style="width: 90%"></div></div></div><button class="btn btn-primary" onclick="showMessage('Opening Data Science course...')">Continue</button></div>
+                </div>
+                <button class="btn btn-primary mt-3" onclick="showMessage('Browse available courses')"><i class="fas fa-plus"></i> Browse More Courses</button>
+            </div>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div id="teacherSection" class="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card"><i class="fas fa-chalkboard" style="font-size: 2rem; color: #667eea;"></i><div class="stat-number">3</div><div>Teaching Courses</div></div>
+                <div class="stat-card"><i class="fas fa-users" style="font-size: 2rem; color: #4caf50;"></i><div class="stat-number">45</div><div>Total Students</div></div>
+                <div class="stat-card"><i class="fas fa-file-alt" style="font-size: 2rem; color: #ff9800;"></i><div class="stat-number">12</div><div>Materials Uploaded</div></div>
+            </div>
+            <div class="card"><div class="card-header"><i class="fas fa-book"></i> My Teaching Courses</div>
+                <div class="course-list">
+                    <div class="course-item"><div><strong>Advanced JavaScript</strong><p style="margin-top: 0.25rem; color: #666;">24 students enrolled</p></div><div><button class="btn btn-primary" onclick="showMessage('View students list')"><i class="fas fa-users"></i> View Students</button><button class="btn btn-secondary" style="margin-left: 0.5rem;" onclick="showMessage('Upload materials')"><i class="fas fa-upload"></i> Upload</button></div></div>
+                    <div class="course-item"><div><strong>React & Node.js</strong><p style="margin-top: 0.25rem; color: #666;">18 students enrolled</p></div><div><button class="btn btn-primary" onclick="showMessage('View students list')"><i class="fas fa-users"></i> View Students</button><button class="btn btn-secondary" style="margin-left: 0.5rem;" onclick="showMessage('Upload materials')"><i class="fas fa-upload"></i> Upload</button></div></div>
+                </div>
+                <button class="btn btn-primary mt-3" onclick="showMessage('Create new course')"><i class="fas fa-plus"></i> Create New Course</button>
+            </div>
+            <div class="card mt-3"><div class="card-header"><i class="fas fa-clock"></i> Recent Activity</div>
+                <div class="course-list"><div class="course-item"><i class="fas fa-user-plus" style="color: #4caf50;"></i><div><strong>5 new students</strong> enrolled in Advanced JavaScript</div><span style="color: #999;">2 hours ago</span></div>
+                <div class="course-item"><i class="fas fa-comment" style="color: #2196f3;"></i><div><strong>Samiha Akter</strong> asked a question in React course</div><span style="color: #999;">Yesterday</span></div></div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div id="adminSection" class="dashboard-section">
+            <div class="stats-grid">
+                <div class="stat-card"><i class="fas fa-users" style="font-size: 2rem; color: #667eea;"></i><div class="stat-number">156</div><div>Total Users</div></div>
+                <div class="stat-card"><i class="fas fa-book" style="font-size: 2rem; color: #4caf50;"></i><div class="stat-number">24</div><div>Total Courses</div></div>
+                <div class="stat-card"><i class="fas fa-chalkboard-teacher" style="font-size: 2rem; color: #ff9800;"></i><div class="stat-number">12</div><div>Teachers</div></div>
+                <div class="stat-card"><i class="fas fa-graduation-cap" style="font-size: 2rem; color: #f44336;"></i><div class="stat-number">144</div><div>Students</div></div>
+            </div>
+            <div class="grid">
+                <div class="card"><div class="card-header"><i class="fas fa-plus-circle"></i> Quick Actions</div>
+                    <button class="btn btn-primary w-100 mb-2" onclick="showMessage('Create new course form')"><i class="fas fa-plus"></i> Add New Course</button>
+                    <button class="btn btn-secondary w-100 mb-2" onclick="showMessage('Assign teacher to course')"><i class="fas fa-user-plus"></i> Assign Teacher</button>
+                    <button class="btn btn-info w-100" onclick="showMessage('View all users')"><i class="fas fa-list"></i> View All Users</button>
+                </div>
+                <div class="card"><div class="card-header"><i class="fas fa-chart-line"></i> Platform Stats</div>
+                    <div><p>📊 Active Courses: <strong>20</strong></p><div class="progress-bar"><div class="progress-fill" style="width: 83%"></div></div></div>
+                    <div class="mt-2"><p>👥 User Growth: <strong>+15%</strong></p><div class="progress-bar"><div class="progress-fill" style="width: 65%"></div></div></div>
+                    <div class="mt-2"><p>📈 Completion Rate: <strong>72%</strong></p><div class="progress-bar"><div class="progress-fill" style="width: 72%"></div></div></div>
+                </div>
+            </div>
+            <div class="card mt-3"><div class="card-header"><i class="fas fa-clock"></i> Recent Registrations</div>
+                <div class="course-list"><div class="course-item"><i class="fas fa-user" style="color: #4caf50;"></i><div><strong>Adiba Tasnim</strong> - Student</div><span>2 hours ago</span></div>
+                <div class="course-item"><i class="fas fa-chalkboard-teacher" style="color: #ff9800;"></i><div><strong>Prof. Sanzida Islam</strong> - Teacher</div><span>Yesterday</span></div>
+                <div class="course-item"><i class="fas fa-user" style="color: #4caf50;"></i><div><strong>Miftahul Jannat</strong> - Student</div><span>Yesterday</span></div></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer"><div class="footer-content"><p>&copy; 2026 EduMaster. Developed by Fatema Akther, Dept. of CSE, CSTU.</p><div class="footer-links"><a href="#"><i class="fas fa-question-circle"></i> Help</a><a href="#"><i class="fas fa-envelope"></i> Contact</a><a href="#"><i class="fas fa-shield-alt"></i> Privacy</a></div></div></footer>
+
+    <script>
+        // Current user data (simulated - will come from Django backend)
+        let currentUser = { name: 'Fatema Akther', avatar: 'F', role: 'student', roleDisplay: 'Student' };
+        
+        // Update UI based on current user
+        function updateUserUI() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.avatar;
+            document.getElementById('userRoleBadge').textContent = currentUser.roleDisplay;
+            document.getElementById('userRoleBadge').className = `role-badge role-${currentUser.role}`;
+        }
+        
+        // Switch between roles (for demo)
+        function switchRole(role) {
+            currentUser.role = role;
+            currentUser.roleDisplay = role === 'student' ? 'Student' : role === 'teacher' ? 'Teacher' : 'Admin';
+            currentUser.name = role === 'student' ? 'Fatema Akther' : role === 'teacher' ? 'Prof. Sanzida Islam' : 'Admin User';
+            currentUser.avatar = currentUser.name.charAt(0);
+            updateUserUI();
+            
+            document.querySelectorAll('.dashboard-section').forEach(section => section.classList.remove('active'));
+            document.getElementById(`${role}Section`).classList.add('active');
+            
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            showMessage(`Switched to ${currentUser.roleDisplay} view`, 'info');
+        }
+        
+        // Show message function
+        function showMessage(message, type = 'success') {
+            const container = document.getElementById('messagesContainer');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message message-${type}`;
+            const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+            msgDiv.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span><button class="message-close">&times;</button>`;
+            container.appendChild(msgDiv);
+            msgDiv.querySelector('.message-close').onclick = () => { msgDiv.style.animation = 'slideOutRight 0.3s forwards'; setTimeout(() => msgDiv.remove(), 300); };
+            setTimeout(() => { if(msgDiv.parentNode) { msgDiv.style.animation = 'slideOutRight 0.3s forwards'; setTimeout(() => msgDiv.remove(), 300); } }, 4000);
+        }
+        
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn')?.addEventListener('click', () => document.querySelector('.nav-links').classList.toggle('active'));
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if(window.scrollY > 50) { navbar.style.background = 'rgba(255,255,255,0.98)'; navbar.style.boxShadow = '0 5px 25px rgba(0,0,0,0.1)'; }
+            else { navbar.style.background = 'rgba(255,255,255,0.95)'; navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.1)'; }
+        });
+        
+        // Initialize
+        updateUserUI();
+    </script>
+</body>
+</html>
